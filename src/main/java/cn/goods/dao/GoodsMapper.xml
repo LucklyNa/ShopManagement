@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goods.dao.GoodsMapper">
+
+    <resultMap id="queryDetail" type="GoodsDetail">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="price" column="price"/>
+        <result property="cerateDate" column="cerateDate"/>
+        <result property="remaining" column="remaining"/>
+        
+        <association property="goodsSort" javaType="GoodsSort" column="sortId">
+            <result property="name" column="sname"/>
+        </association>
+    </resultMap>
+    <!--查询所有的商品列表信息-->
+    <select id="queryAllGoodsSort" resultType="GoodsSort">
+        SELECT
+            `id`,
+            `name`
+        FROM
+            `goods_sort`
+    </select>
+
+    <!--查询数据库中的总记录数-->
+    <select id="queryGoodsDetailCount" parameterType="java.lang.Integer">
+        SELECT COUNT(1) FROM `goods_detail`
+        <where>
+            <if test="sortId != null and sortId != 0">
+                `sortId`=#{sortId}
+            </if>
+        </where>
+    </select>
+    
+     <!--分页查询所有数据-->
+    <select id="queryGoodsDetailPageList" resultMap="queryDetail">
+        SELECT d.*,s.`name` sname FROM `goods_detail` d,`goods_sort` s WHERE d.`sortId`=s.`id`
+       <if test="sortId != null and sortId != 0">
+          and d.sortId = #{sortId}
+       </if>
+         limit #{strartPage},#{pageSize}
+    </select>
+</mapper>
