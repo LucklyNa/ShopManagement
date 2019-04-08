@@ -37,5 +37,8 @@ public class GoodsController {
         return "goodsList";
     }
 
-
+   //新增
+    public String aa(){
+        return "";
+    }
 }
